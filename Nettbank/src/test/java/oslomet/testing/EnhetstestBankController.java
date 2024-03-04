@@ -37,6 +37,36 @@ public class EnhetstestBankController {
     private Sikkerhet sjekk;
 
     @Test
+    public void HentTransaksjoner() {
+        // Opprett dummydata for testen
+        String kontoNr = "123456789";
+        String fraDato = "2022-01-01";
+        String tilDato = "2022-02-01";
+
+        Transaksjon transaksjon1 = new Transaksjon(1, "23233232", 332332, "21-02-2030", "Betaling for varer", "105010123456", "23");
+        Transaksjon transaksjon2 = new Transaksjon(1, "2321122", 1232, "21-02-2020", "Betaling for varer", "105010123456", "23");
+        List<Transaksjon> transaksjoner = Arrays.asList(transaksjon1, transaksjon2);
+
+        Konto konto = new Konto("242","105010123456", 4434, "nok", "nok",transaksjoner);
+        konto.setTransaksjoner(transaksjoner);
+
+
+        // Setter opp mock-oppførsel for repository.hentTransaksjoner()
+        when(repository.hentTransaksjoner(kontoNr, fraDato, tilDato)).thenReturn(konto);
+
+        // Setter opp mock-oppførsel for sjekk.loggetInn()
+        when(sjekk.loggetInn()).thenReturn("01010110523"); // Simulerer at noen er logget inn
+
+        // Kall metoden som skal testes
+        Konto resultat = bankController.hentTransaksjoner(kontoNr, fraDato, tilDato);
+
+        // Sjekk om resultatet er som forventet
+        assertNotNull(resultat);
+        assertEquals(konto, resultat);
+        assertEquals(transaksjoner.size(), resultat.getTransaksjoner().size());
+    }
+
+    @Test
     public void hentKundeInfo_loggetInn() {
 
         // arrange
@@ -104,7 +134,7 @@ public class EnhetstestBankController {
     }
 
     @Test
-    public void testHentSaldi() {
+    public void HentSaldi() {
         // Opprett dummydata for testen
         String personnummer = "123456789";
         Konto konto1 = new Konto("105010123456", "01010110523", 720, "Lønnskonto", "NOK", null);
@@ -127,7 +157,7 @@ public class EnhetstestBankController {
     }
 
     @Test
-    public void testRegistrerBetaling() {
+    public void RegistrerBetaling() {
         // Opprett dummydata for testen
         Transaksjon betaling = new Transaksjon(/* legg til relevant data */);
 
@@ -144,7 +174,7 @@ public class EnhetstestBankController {
         assertEquals("OK", resultat);
     }
     @Test
-    public void testHentBetalinger() {
+    public void HentBetalinger() {
         // Opprett dummydata for testen
         String personnummer = "123456789";
         List<Transaksjon> transaksjoner = new ArrayList<>();
@@ -202,6 +232,23 @@ public class EnhetstestBankController {
 
         // Sjekk om resultatet er det samme som det forventede
         assertEquals(kunde, resultat);
+    }
+    @Test
+    public void EndreKundeInfo() {
+        // Opprett dummykunde for testen
+        Kunde kunde = new Kunde("982398298332","john", "John", "oslogate", "123", "oslo", "545", "34434");
+
+        // Sett opp mock-oppførselen for sikkerhet
+        when(sjekk.loggetInn()).thenReturn(kunde.getPersonnummer());
+
+        // Sett opp mock-oppførselen for repository
+        when(repository.endreKundeInfo(kunde)).thenReturn("OK");
+
+        // Kjør metoden som skal testes
+        String resultat = bankController.endre(kunde);
+
+        // Sjekk om resultatet er det samme som det forventede
+        assertEquals("OK", resultat);
     }
 }
 
