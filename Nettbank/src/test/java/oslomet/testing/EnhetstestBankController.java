@@ -185,5 +185,23 @@ public class EnhetstestBankController {
         assertEquals(1, resultat.size());
         // Legg til flere asserter om nødvendig
     }
+    @Test
+    public void HentKundeInfo() {
+        // Opprett dummydata for testen
+        String personnummer = "123456789";
+        Kunde kunde = new Kunde(); // Opprett en dummykunde
+
+        // Sett opp mock-oppførselen for sikkerhet
+        when(sjekk.loggetInn()).thenReturn(personnummer);
+
+        // Sett opp mock-oppførselen for repository
+        when(repository.hentKundeInfo(personnummer)).thenReturn(kunde);
+
+        // Kjør metoden som skal testes
+        Kunde resultat = bankController.hentKundeInfo();
+
+        // Sjekk om resultatet er det samme som det forventede
+        assertEquals(kunde, resultat);
+    }
 }
 
