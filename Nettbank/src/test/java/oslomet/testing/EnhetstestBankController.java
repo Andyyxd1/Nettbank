@@ -17,8 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -164,6 +163,27 @@ public class EnhetstestBankController {
         assertEquals(transaksjoner.size(), resultat.size());
         // Legg til flere asserter om nødvendig
     }
+    @Test
+    public void UtforBetaling() {
+        // Opprett dummydata for testen
+        int txID = 123;
+        String personnummer = "123456789";
+        Transaksjon transaksjon = new Transaksjon(); // Opprett en dummytransaksjon
 
+        // Sett opp mock-oppførselen for sikkerhet
+        when(sjekk.loggetInn()).thenReturn(personnummer);
+
+        // Sett opp mock-oppførselen for repository
+        when(repository.utforBetaling(txID)).thenReturn("OK");
+        when(repository.hentBetalinger(personnummer)).thenReturn(Arrays.asList(transaksjon)); // Legg til transaksjonen i listen
+
+        // Kjør metoden som skal testes
+        List<Transaksjon> resultat = bankController.utforBetaling(txID);
+
+        // Sjekk om resultatet er det samme som det forventede
+        assertNotNull(resultat);
+        assertEquals(1, resultat.size());
+        // Legg til flere asserter om nødvendig
+    }
 }
 
