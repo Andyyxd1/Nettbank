@@ -10,6 +10,7 @@ import oslomet.testing.API.BankController;
 import oslomet.testing.DAL.BankRepository;
 import oslomet.testing.Models.Konto;
 import oslomet.testing.Models.Kunde;
+import oslomet.testing.Models.Transaksjon;
 import oslomet.testing.Sikkerhet.Sikkerhet;
 
 import java.util.ArrayList;
@@ -124,6 +125,24 @@ public class EnhetstestBankController {
         assertEquals(konti.size(), resultat.size());
         assertEquals(konti.get(0), resultat.get(0));
         assertEquals(konti.get(1), resultat.get(1));
+    }
+
+    @Test
+    public void testRegistrerBetaling() {
+        // Opprett dummydata for testen
+        Transaksjon betaling = new Transaksjon(/* legg til relevant data */);
+
+        // Sett opp mock-oppførselen for sikkerhet
+        when(sjekk.loggetInn()).thenReturn("123456789");
+
+        // Sett opp mock-oppførselen for repository
+        when(repository.registrerBetaling(betaling)).thenReturn("OK");
+
+        // Kjør metoden som skal testes
+        String resultat = bankController.registrerBetaling(betaling);
+
+        // Sjekk om resultatet er det samme som det forventede
+        assertEquals("OK", resultat);
     }
 
 
