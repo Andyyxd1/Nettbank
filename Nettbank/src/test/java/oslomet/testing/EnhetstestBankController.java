@@ -144,7 +144,26 @@ public class EnhetstestBankController {
         // Sjekk om resultatet er det samme som det forventede
         assertEquals("OK", resultat);
     }
+    @Test
+    public void testHentBetalinger() {
+        // Opprett dummydata for testen
+        String personnummer = "123456789";
+        List<Transaksjon> transaksjoner = new ArrayList<>();
+        // Legg til dummytransaksjoner i listen
 
+        // Sett opp mock-oppførselen for sikkerhet
+        when(sjekk.loggetInn()).thenReturn(personnummer);
+
+        // Sett opp mock-oppførselen for repository
+        when(repository.hentBetalinger(personnummer)).thenReturn(transaksjoner);
+
+        // Kjør metoden som skal testes
+        List<Transaksjon> resultat = bankController.hentBetalinger();
+
+        // Sjekk om resultatet er det samme som det forventede
+        assertEquals(transaksjoner.size(), resultat.size());
+        // Legg til flere asserter om nødvendig
+    }
 
 }
 
