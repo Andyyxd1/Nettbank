@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import oslomet.testing.API.BankController;
 import oslomet.testing.DAL.BankRepository;
@@ -12,6 +13,7 @@ import oslomet.testing.Models.Kunde;
 import oslomet.testing.Sikkerhet.Sikkerhet;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -67,7 +69,7 @@ public class EnhetstestBankController {
     }
 
     @Test
-    public void hentKonti_LoggetInn()  {
+    public void hentKonti_LoggetInn() {
         // arrange
         List<Konto> konti = new ArrayList<>();
         Konto konto1 = new Konto("105010123456", "01010110523",
@@ -89,7 +91,7 @@ public class EnhetstestBankController {
     }
 
     @Test
-    public void hentKonti_IkkeLoggetInn()  {
+    public void hentKonti_IkkeLoggetInn() {
         // arrange
 
         when(sjekk.loggetInn()).thenReturn(null);
@@ -100,5 +102,30 @@ public class EnhetstestBankController {
         // assert
         assertNull(resultat);
     }
+
+    @Test
+    public void testHentSaldi() {
+        // Opprett dummydata for testen
+        String personnummer = "123456789";
+        Konto konto1 = new Konto("105010123456", "01010110523", 720, "Lønnskonto", "NOK", null);
+        Konto konto2 = new Konto("105010123457", "01010110524", 820, "Sparekonto", "NOK", null);
+        List<Konto> konti = Arrays.asList(konto1, konto2);
+
+        // Sett opp mock-oppførselen for sikkerhet
+        when(sjekk.loggetInn()).thenReturn(personnummer);
+
+        // Sett opp mock-oppførselen for repository
+        when(repository.hentSaldi(personnummer)).thenReturn(konti);
+
+        // Kjør metoden som skal testes
+        List<Konto> resultat = bankController.hentSaldi();
+
+        // Sjekk om resultatet er det samme som det forventede
+        assertEquals(konti.size(), resultat.size());
+        assertEquals(konti.get(0), resultat.get(0));
+        assertEquals(konti.get(1), resultat.get(1));
+    }
+
+
 }
 
