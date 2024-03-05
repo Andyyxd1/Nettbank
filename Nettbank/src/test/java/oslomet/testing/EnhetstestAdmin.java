@@ -65,27 +65,20 @@ public class EnhetstestAdmin {
         List<Konto> resultat= adminKontoController.hentAlleKonti();
         assertNull(resultat);
     }
-
-    @Test
     //Legge inn kono
-    public void registrerKonto(){
-        Konto nyKonto= new Konto("20032023456","2334",300,
-                "Lønnkonto","NOK",null);
-        when(adminRepository.registrerKonto(nyKonto)).thenReturn("Ikke innlogget");
+    @Test
+    public void registrerKonto() {
+        Konto nyKonto = new Konto("20032023456", "2334", 300,
+                "Lønnkonto", "NOK", null);
 
-        String resultat= adminKontoController.registrerKonto(nyKonto);
+        String resultat = adminKontoController.registrerKonto(nyKonto);
         assertEquals("Ikke innlogget", resultat);
     }
 
     @Test
-    public void regisrerKonto_feil(){
-        Konto nyKonto= new Konto("20032023456","299877334",300,
-                "Lønnkonto","NOK",null);
-
-        when(adminRepository.registrerKonto(null)).thenReturn("Ikke innlogget");
-
+    public void regisrerKonto_feil() {
         String resultat = adminKontoController.registrerKonto(null);
-        assertEquals("Ikke innlogget",resultat);
+        assertEquals("Ikke innlogget", resultat);
     }
 
     // her Kommer logget inn går igjennom
@@ -166,25 +159,12 @@ public class EnhetstestAdmin {
    /* Denne testmetoden sjekker at forsøk på å endre kontooplysninger
    uten å være logget inn, returnerer riktig feilmelding */
    @Test
-   public void endreKontoIkkeLoggetInn(){
-        // oppretter en ny konto-instans med testdata
-        Konto enKonto= new Konto("765432216","105010123456",720,
-                "LønnsKonto", "NOK",null);
-        /* Simulerer en situasjon der brukeren forsøker å  endre
-        kontoopplysninger uten å være logget inn. Når "loggetInn" metoden på sjekk objektet
-        kalles, returnerer den null, som indikerer at brukeren ikke er innlogget.*/
-        when(sjekk.loggetInn()).thenReturn(null);
+   public void endreKontoIkkeLoggetInn() {
+       Konto enKonto = new Konto("765432216", "105010123456", 720,
+               "LønnsKonto", "NOK", null);
 
-        /*Setter opp forventningen om at hvis "endreKonto" metoden på
-          "adminRepository" blir kalt med "enKonto" som argument,
-          og brukeren ikke er innlogget så skal metoden returnere "ikke innlogget" */
-        when(adminRepository.endreKonto(enKonto)).thenReturn("Ikke innlogget");
-
-        /*Utfører handlingen som testes: Forsøk på å endre konto med
-        * opprettende konto-objektet, og lagrer resultatet.*/
-        String resultat = adminKontoController.endreKonto(enKonto);
-        // sjekker om forsøket om endret konto uten være innlogget returner riktig.
-        assertEquals("Ikke innlogget",resultat);
+       String resultat = adminKontoController.endreKonto(enKonto);
+       assertEquals("Ikke innlogget", resultat);
    }
 
    //Hassan
