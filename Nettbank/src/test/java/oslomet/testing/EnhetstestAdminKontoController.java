@@ -3,15 +3,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import oslomet.testing.API.AdminKontoController;
-import oslomet.testing.API.BankController;
+
 import oslomet.testing.DAL.AdminRepository;
-import oslomet.testing.DAL.BankRepository;
+
 import oslomet.testing.Models.Konto;
-import oslomet.testing.Models.Kunde;
-import oslomet.testing.Models.Transaksjon;
+
+
 import oslomet.testing.Sikkerhet.Sikkerhet;
 
 import java.util.ArrayList;
@@ -124,5 +123,57 @@ public class EnhetstestAdminKontoController {
         String resultat = adminKontoController.endreKonto(kontoTo);
 
         assertEquals("feil i personnummer",resultat);
+    }
+    @Test
+    public void endreKontoFeiletKontonummer(){
+        Konto kontoTo =  new Konto("0101292","1982928323",720,"lønnskonto", "NOK",null);
+        when(sjekk.loggetInn()).thenReturn("innlogget");
+
+        when(adminRepository.endreKonto(kontoTo)).thenReturn("feil i kontonummer");
+
+        String resultat = adminKontoController.endreKonto(kontoTo);
+
+        assertEquals("feil i kontonummer",resultat);
+    }
+    @Test
+    public void endreKontoIkkeLoggetInn(){
+        Konto kontoen =  new Konto("0101292","1982928323",720,"lønnskonto", "NOK",null);
+        when(sjekk.loggetInn()).thenReturn(null);
+
+
+        String resultat = adminKontoController.endreKonto(kontoen);
+
+        assertEquals("Ikke innlogget",resultat);
+    }
+    @Test
+    public void slettKonto(){
+        when(sjekk.loggetInn()).thenReturn("7848773443");
+
+        when(adminRepository.slettKonto(anyString())).thenReturn("ok");
+
+        String resultat = adminKontoController.slettKonto("7848773443");
+
+        assertEquals("ok",resultat);
+    }
+    @Test
+    public void slettKontoFeilet(){
+        Konto kontoen =  new Konto("0101292","1982928323",720,"lønnskonto", "NOK",null);
+        when(sjekk.loggetInn()).thenReturn("7848773443");
+
+        when(adminRepository.slettKonto(anyString())).thenReturn("Feil kontonummer");
+
+        String resultat = adminKontoController.slettKonto("7848773443");
+
+        assertEquals("Feil kontonummer",resultat);
+    }
+    @Test
+    public void slettKontoIkkeLoggetInn(){
+        Konto kontoen =  new Konto("0101292","1982928323",720,"lønnskonto", "NOK",null);
+        when(sjekk.loggetInn()).thenReturn(null);
+
+
+        String resultat = adminKontoController.slettKonto("7848773443");
+
+        assertEquals("Ikke innlogget",resultat);
     }
 }
