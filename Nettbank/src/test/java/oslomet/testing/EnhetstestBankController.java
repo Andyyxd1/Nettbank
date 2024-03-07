@@ -36,20 +36,6 @@ public class EnhetstestBankController {
     // denne skal Mock'es
     private Sikkerhet sjekk;
 
-   @Test
-   public void hentTransaksjoner_LoggetInn(){
-       List<Transaksjon> transaksjon = new ArrayList<>();
-       Transaksjon transaksjon1 = new Transaksjon(1, "23233232", 332332, "21-02-2030", "Betaling for varer", "105010123456", "23");
-       Transaksjon transaksjon2 = new Transaksjon(1, "2321122", 1232, "21-02-2020", "Betaling for varer", "105010123456", "23");
-
-       transaksjon.add(transaksjon1);
-       transaksjon.add(transaksjon2);
-
-       Konto kontoen =  new Konto("0101292","1982928323",720,"lønnskonto", "NOK",null);
-       when(sjekk.loggetInn()).thenReturn("innlogget");
-
-   }
-
     @Test
     public void HentTransaksjoner() {
         // Opprett dummydata for testen
@@ -229,7 +215,40 @@ public class EnhetstestBankController {
         assertEquals(1, resultat.size());
         // Legg til flere asserter om nødvendig
     }
+    @Test
+    public void HentKundeInfo() {
+        // Opprett dummydata for testen
+        String personnummer = "123456789";
+        Kunde kunde = new Kunde(); // Opprett en dummykunde
 
+        // Sett opp mock-oppførselen for sikkerhet
+        when(sjekk.loggetInn()).thenReturn(personnummer);
 
+        // Sett opp mock-oppførselen for repository
+        when(repository.hentKundeInfo(personnummer)).thenReturn(kunde);
+
+        // Kjør metoden som skal testes
+        Kunde resultat = bankController.hentKundeInfo();
+
+        // Sjekk om resultatet er det samme som det forventede
+        assertEquals(kunde, resultat);
+    }
+    @Test
+    public void EndreKundeInfo() {
+        // Opprett dummykunde for testen
+        Kunde kunde = new Kunde("982398298332","john", "John", "oslogate", "123", "oslo", "545", "34434");
+
+        // Sett opp mock-oppførselen for sikkerhet
+        when(sjekk.loggetInn()).thenReturn(kunde.getPersonnummer());
+
+        // Sett opp mock-oppførselen for repository
+        when(repository.endreKundeInfo(kunde)).thenReturn("OK");
+
+        // Kjør metoden som skal testes
+        String resultat = bankController.endre(kunde);
+
+        // Sjekk om resultatet er det samme som det forventede
+        assertEquals("OK", resultat);
+    }
 }
 
