@@ -37,7 +37,7 @@ public class EnhetstestBankController {
     private Sikkerhet sjekk;
 
     @Test
-    public void HentTransaksjoner() {
+    public void HentTransaksjoner_LoggetInn() {
         // Opprett dummydata for testen
         String kontoNr = "123456789";
         String fraDato = "2022-01-01";
@@ -55,7 +55,7 @@ public class EnhetstestBankController {
         when(repository.hentTransaksjoner(kontoNr, fraDato, tilDato)).thenReturn(konto);
 
         // Setter opp mock-oppførsel for sjekk.loggetInn()
-        when(sjekk.loggetInn()).thenReturn("01010110523"); // Simulerer at noen er logget inn
+        when(sjekk.loggetInn()).thenReturn("Innlogget"); // Simulerer at noen er logget inn
 
         // Kall metoden som skal testes
         Konto resultat = bankController.hentTransaksjoner(kontoNr, fraDato, tilDato);
@@ -64,6 +64,16 @@ public class EnhetstestBankController {
         assertNotNull(resultat);
         assertEquals(konto, resultat);
         assertEquals(transaksjoner.size(), resultat.getTransaksjoner().size());
+    }
+
+    @Test
+    public void hentTransaksjoner_IkkeLoggetInn() {
+        when(sjekk.loggetInn()).thenReturn(null);
+        when(bankController.hentTransaksjoner("32878738732", "28.01-2024", "30.01.2024")).thenReturn(null);
+
+        Konto resultat = bankController.hentTransaksjoner("32878738732", "28.01-2024", "30.01.2024");
+
+        assertNull(resultat);
     }
 
     @Test
@@ -134,7 +144,7 @@ public class EnhetstestBankController {
     }
 
     @Test
-    public void HentSaldi() {
+    public void HentSaldi_Loggetinn() {
         // Opprett dummydata for testen
         String personnummer = "123456789";
         Konto konto1 = new Konto("105010123456", "01010110523", 720, "Lønnskonto", "NOK", null);
@@ -157,98 +167,184 @@ public class EnhetstestBankController {
     }
 
     @Test
-    public void RegistrerBetaling() {
-        // Opprett dummydata for testen
-        Transaksjon betaling = new Transaksjon(/* legg til relevant data */);
+    public void hentSaldi_IkkeLoggetInn(){
+        when(sjekk.loggetInn()).thenReturn(null);
 
-        // Sett opp mock-oppførselen for sikkerhet
-        when(sjekk.loggetInn()).thenReturn("123456789");
+        List<Konto> resulstat = bankController.hentSaldi();
 
-        // Sett opp mock-oppførselen for repository
-        when(repository.registrerBetaling(betaling)).thenReturn("OK");
+        assertNull(resulstat);
+    }
 
-        // Kjør metoden som skal testes
-        String resultat = bankController.registrerBetaling(betaling);
+    @Test
+    public void hentSaldi_Feilet(){
+        when(sjekk.loggetInn()).thenReturn("Innlogget");
 
-        // Sjekk om resultatet er det samme som det forventede
-        assertEquals("OK", resultat);
+        when(repository.hentSaldi(anyString())).thenReturn(null);
+
+        List<Konto> resulstat = bankController.hentSaldi();
+
+        assertNull(resulstat);
+
+    }
+
+    @Test
+    public void RegistrerBetaling_Loggetinn() {
+        Transaksjon transaksjon1 = new Transaksjon(1, "23233232", 332332, "21-02-2030", "Betaling for varer", "105010123456", "23");
+
+        when(sjekk.loggetInn()).thenReturn("Innlogget");
+
+        when(repository.registrerBetaling(transaksjon1)).thenReturn("OK");
+
+        String resultat = bankController.registrerBetaling(transaksjon1);
+
+        assertEquals("OK",resultat);
     }
     @Test
-    public void HentBetalinger() {
-        // Opprett dummydata for testen
-        String personnummer = "123456789";
-        List<Transaksjon> transaksjoner = new ArrayList<>();
-        // Legg til dummytransaksjoner i listen
+    public void RegistrerBetaling_IkkeLoggetInn(){
+        Transaksjon transaksjon1 = new Transaksjon(1, "23233232", 332332, "21-02-2030", "Betaling for varer", "105010123456", "23");
 
-        // Sett opp mock-oppførselen for sikkerhet
-        when(sjekk.loggetInn()).thenReturn(personnummer);
+        when(sjekk.loggetInn()).thenReturn(null);
 
-        // Sett opp mock-oppførselen for repository
-        when(repository.hentBetalinger(personnummer)).thenReturn(transaksjoner);
+        String resultat = bankController.registrerBetaling(transaksjon1);
 
-        // Kjør metoden som skal testes
+        assertNull(resultat);
+    }
+    @Test
+    public void HentBetalinger_LoggetInn() {
+        Transaksjon transaksjon1 = new Transaksjon(1, "23233232", 332332, "21-02-2030", "Betaling for varer", "105010123456", "23");
+
+        List<Transaksjon> trannsaksjon = new ArrayList<>();
+        trannsaksjon.add(transaksjon1);
+
+        when(sjekk.loggetInn()).thenReturn("Innlogget");
+
+        when(repository.hentBetalinger(anyString())).thenReturn(trannsaksjon);
+
         List<Transaksjon> resultat = bankController.hentBetalinger();
 
-        // Sjekk om resultatet er det samme som det forventede
-        assertEquals(transaksjoner.size(), resultat.size());
-        // Legg til flere asserter om nødvendig
+        assertEquals(trannsaksjon,resultat);
+    }
+
+    @Test
+    public void HentBetalinger_IkkeLoggetInn(){
+        when(sjekk.loggetInn()).thenReturn(null);
+
+        List<Transaksjon> resultat = bankController.hentBetalinger();
+
+        assertNull(resultat);
     }
     @Test
-    public void UtforBetaling() {
-        // Opprett dummydata for testen
-        int txID = 123;
-        String personnummer = "123456789";
-        Transaksjon transaksjon = new Transaksjon(); // Opprett en dummytransaksjon
+    public void HentBetalinger_Feilet(){
+        when(sjekk.loggetInn()).thenReturn("Innlogget");
 
-        // Sett opp mock-oppførselen for sikkerhet
-        when(sjekk.loggetInn()).thenReturn(personnummer);
+        when(repository.hentBetalinger(anyString())).thenReturn(null);
 
-        // Sett opp mock-oppførselen for repository
-        when(repository.utforBetaling(txID)).thenReturn("OK");
-        when(repository.hentBetalinger(personnummer)).thenReturn(Arrays.asList(transaksjon)); // Legg til transaksjonen i listen
+        List<Transaksjon> resultat = bankController.hentBetalinger();
 
-        // Kjør metoden som skal testes
-        List<Transaksjon> resultat = bankController.utforBetaling(txID);
-
-        // Sjekk om resultatet er det samme som det forventede
-        assertNotNull(resultat);
-        assertEquals(1, resultat.size());
-        // Legg til flere asserter om nødvendig
+        assertNull(resultat);
     }
+
+
     @Test
-    public void HentKundeInfo() {
+    public void UtforBetaling_LoggetInn_OKtxID() {
+        // Din testmetode
+            // Opprett dummydata for testen
+            Transaksjon transaksjon1 = new Transaksjon(1, "23233232", 332332, "21-02-2030", "Betaling for varer", "105010123456", "23");
+
+            List<Transaksjon> transaksjonListe = new ArrayList<>();
+            transaksjonListe.add(transaksjon1);
+
+            // Anta at "sjekk" og "repository" er riktig initialisert
+
+            when(sjekk.loggetInn()).thenReturn("Innlogget");
+            when(repository.utforBetaling(transaksjon1.getTxID())).thenReturn("OK");
+            when(repository.hentBetalinger(anyString())).thenReturn(transaksjonListe);
+
+            List<Transaksjon> resultat = bankController.utforBetaling(transaksjon1.getTxID());
+
+            assertEquals(transaksjonListe, resultat);
+        }
+
+        @Test
+        public void UtforBetaling_LoggetInn_IkkeOKtxID(){
+            Transaksjon transaksjon1 = new Transaksjon(1, "23233232", 332332, "21-02-2030", "Betaling for varer", "105010123456", "23");
+
+            List<Transaksjon> transaksjon = new ArrayList<>();
+
+            transaksjon.add(transaksjon1);
+
+            when(sjekk.loggetInn()).thenReturn("Innlogget");
+            when(repository.utforBetaling(transaksjon1.getTxID())).thenReturn("Feil");
+
+            List<Transaksjon> resultat = bankController.utforBetaling(transaksjon1.getTxID());
+
+            assertNull(resultat);
+        }
+
+        @Test
+        public void UtforBetaling_IkkeLoggetInn(){
+        when(sjekk.loggetInn()).thenReturn(null);
+
+        List<Transaksjon> resultat = bankController.utforBetaling(1);
+
+        assertNull(resultat);
+        }
+    @Test
+    public void HentKundeInfo_LoggetInn() {
         // Opprett dummydata for testen
-        String personnummer = "123456789";
-        Kunde kunde = new Kunde(); // Opprett en dummykunde
+        Kunde kunde = new Kunde("982398298332","john", "John", "oslogate", "123", "oslo", "545", "34434");
+       when(sjekk.loggetInn()).thenReturn("982398298332");
 
-        // Sett opp mock-oppførselen for sikkerhet
-        when(sjekk.loggetInn()).thenReturn(personnummer);
+       when(repository.hentKundeInfo(anyString())).thenReturn(kunde);
 
-        // Sett opp mock-oppførselen for repository
-        when(repository.hentKundeInfo(personnummer)).thenReturn(kunde);
+       Kunde resultat = bankController.hentKundeInfo();
 
-        // Kjør metoden som skal testes
+       assertEquals(kunde,resultat);
+    }
+
+    @Test
+    public void HentKundeInfo_IkkeLoggetInn(){
+        when(sjekk.loggetInn()).thenReturn(null);
+
         Kunde resultat = bankController.hentKundeInfo();
 
-        // Sjekk om resultatet er det samme som det forventede
-        assertEquals(kunde, resultat);
+        assertNull(resultat);
     }
     @Test
-    public void EndreKundeInfo() {
+    public void EndreKundeInfo_LoggetInn() {
         // Opprett dummykunde for testen
         Kunde kunde = new Kunde("982398298332","john", "John", "oslogate", "123", "oslo", "545", "34434");
 
-        // Sett opp mock-oppførselen for sikkerhet
-        when(sjekk.loggetInn()).thenReturn(kunde.getPersonnummer());
-
-        // Sett opp mock-oppførselen for repository
+        when(sjekk.loggetInn()).thenReturn("Innlogget");
         when(repository.endreKundeInfo(kunde)).thenReturn("OK");
 
-        // Kjør metoden som skal testes
         String resultat = bankController.endre(kunde);
 
-        // Sjekk om resultatet er det samme som det forventede
-        assertEquals("OK", resultat);
+        assertEquals("OK",resultat);
+    }
+
+    @Test
+    public void EndreKundeInfo_IkkeLoggetInn(){
+        Kunde kunde = new Kunde("982398298332","john", "John", "oslogate", "123", "oslo", "545", "34434");
+
+        when(sjekk.loggetInn()).thenReturn(null);
+
+        String resultat = bankController.endre(kunde);
+
+        assertNull(resultat);
+    }
+
+    @Test
+    public void EndreKundeInfo_Feilet(){
+        Kunde kunde = new Kunde("982398298332","john", "John", "oslogate", "123", "oslo", "545", "34434");
+
+        when(sjekk.loggetInn()).thenReturn("Innlogget");
+
+        when(repository.endreKundeInfo(kunde)).thenReturn(null);
+
+        String resultat = bankController.endre(kunde);
+
+        assertNull(resultat);
     }
 }
 
