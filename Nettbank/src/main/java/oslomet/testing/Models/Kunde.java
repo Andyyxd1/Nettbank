@@ -23,8 +23,8 @@ public class Kunde
         this.passord = passord;
     }
 
-    public Kunde() {
-    }
+
+
 
     public String getPersonnummer() {
         return personnummer;

@@ -19,8 +19,7 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNull;
 import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 // Klassen 'EnhetstestSikkerhetsController' inneholder tester for 'Sikkerhet'-komponenten.
@@ -67,6 +66,12 @@ public class EnhetstestSikkerhetsController {
             }
         }).when(session).setAttribute(anyString(), anyString());
         // Det er viktig å merke seg at det siste argumentet bør være any() for å fange opp alle typer objekter, ikke bare String.
+        doAnswer(invocation -> {
+            String key = (String) invocation.getArguments()[0];
+            attributes.remove(key);
+            return null;
+        }).when(session).removeAttribute(anyString());
+
     }
 
 
@@ -83,7 +88,7 @@ public class EnhetstestSikkerhetsController {
     // Verifiserer at feil personnummer gir riktig feilmelding
     @Test
     public void sjekkLoginFeilIPersonnummer() {
-        when(bankRepo.sjekkLoggInn(anyString(), anyString())).thenReturn("Feil i personnummer");
+ lenient().when(bankRepo.sjekkLoggInn(anyString(), anyString())).thenReturn("Feil i personnummer");
 
         String resultat = sikkerhet.sjekkLoggInn("0123456789", "HeiHeiHei");
         assertEquals("Feil i personnummer", resultat);
@@ -92,7 +97,7 @@ public class EnhetstestSikkerhetsController {
     // Bekrefter at feil passord gir korrekt feilmelding
     @Test
     public void sjekkLoginFeilIPassord() {
-        when(bankRepo.sjekkLoggInn(anyString(), anyString())).thenReturn("Feil i passord");
+    lenient().when(bankRepo.sjekkLoggInn(anyString(), anyString())).thenReturn("Feil i passord");
 
         String resultat = sikkerhet.sjekkLoggInn("01234567890", "Hei");
         assertEquals("Feil i passord", resultat);

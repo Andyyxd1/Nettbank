@@ -219,7 +219,8 @@ public class EnhetstestBankController {
     public void HentKundeInfo() {
         // Opprett dummydata for testen
         String personnummer = "123456789";
-        Kunde kunde = new Kunde(); // Opprett en dummykunde
+        Kunde kunde = new Kunde("01010110523", "Lene", "Jensen",
+                "Askerveien 22", "3270", "Asker", "22224444", "HeiHei"); // Opprett en dummykunde
 
         // Sett opp mock-oppførselen for sikkerhet
         when(sjekk.loggetInn()).thenReturn(personnummer);
