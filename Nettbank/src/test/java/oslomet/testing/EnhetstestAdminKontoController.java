@@ -32,7 +32,6 @@ public class EnhetstestAdminKontoController {
     @Mock
     private Sikkerhet sjekk;
 
-    // Tester om henting av alle kontoer fungerer som forventet når brukeren er innlogget.
     @Test
     public void hentAlleKonti() {
         // Opprett to kontoobjekter
@@ -58,7 +57,6 @@ public class EnhetstestAdminKontoController {
     }
 
 
-    // Tester om henting av alle kontoer mislykkes når brukeren ikke er innlogget.
     @Test
     public void hentAlleKonti_IkkeLoggetInn() {
         // Simulerer at brukeren ikke er innlogget
@@ -70,7 +68,6 @@ public class EnhetstestAdminKontoController {
         assertNull(resultat);
     }
 
-    // Tester om registrering av konto fungerer som forventet når brukeren er innlogget.
     @Test
     public void registrerKonto() {
         // Opprett et kontoobjekt
@@ -88,7 +85,6 @@ public class EnhetstestAdminKontoController {
         assertEquals("ok", resultat);
     }
 
-    // Tester at registrering av konto mislykkes når brukeren ikke er innlogget.
     @Test
     public void registrertKonto_IkkeLoggetInn() {
         // Opprett et kontoobjekt
@@ -103,7 +99,6 @@ public class EnhetstestAdminKontoController {
         assertEquals("Ikke innlogget", resultat);
     }
 
-    // Tester at registrering av konto mislykkes når kontoobjektet er null.
     @Test
     public void registrerKonto_feil() {
         // Opprett et kontoobjekt
@@ -121,7 +116,6 @@ public class EnhetstestAdminKontoController {
         assertEquals("feil", resultat);
     }
 
-    // Tester endring av konto og forventer vellykket resultat.
     @Test
     public void endreKonto() {
         // Opprett et kontoobjekt
@@ -139,7 +133,6 @@ public class EnhetstestAdminKontoController {
         assertEquals("ok", resultat);
     }
 
-    // Tester generell feil ved endring av konto.
     @Test
     public void endreKontoFeiletGenerlt() {
         // Opprett et kontoobjekt
@@ -157,7 +150,6 @@ public class EnhetstestAdminKontoController {
         assertEquals("feil", resultat);
     }
 
-    // Tester feil i personnummer ved endring av konto.
     @Test
     public void endreKontoFeiletPersonnummer() {
         // Opprett et kontoobjekt
@@ -175,7 +167,6 @@ public class EnhetstestAdminKontoController {
         assertEquals("feil i personnummer", resultat);
     }
 
-    // Tester feil i kontonummer ved endring av konto.
     @Test
     public void endreKontoFeiletKontonummer() {
         // Opprett et kontoobjekt
@@ -193,7 +184,6 @@ public class EnhetstestAdminKontoController {
         assertEquals("feil i kontonummer", resultat);
     }
 
-    // Tester endring av konto når brukeren ikke er innlogget.
     @Test
     public void endreKontoIkkeLoggetInn() {
         // Opprett et kontoobjekt
@@ -208,7 +198,6 @@ public class EnhetstestAdminKontoController {
         assertEquals("Ikke innlogget", resultat);
     }
 
-    // Tester sletting av konto.
     @Test
     public void slettKonto() {
         // Simulerer at brukeren er innlogget med en bestemt ID
@@ -223,7 +212,6 @@ public class EnhetstestAdminKontoController {
         assertEquals("ok", resultat);
     }
 
-    // Tester feilet sletting av konto på grunn av feil kontonummer.
     @Test
     public void slettKontoFeilet() {
         // Opprett et kontoobjekt
@@ -241,7 +229,6 @@ public class EnhetstestAdminKontoController {
         assertEquals("Feil kontonummer", resultat);
     }
 
-    // Tester sletting av konto når brukeren ikke er innlogget.
     @Test
     public void slettKontoIkkeLoggetInn() {
         // Opprett et kontoobjekt

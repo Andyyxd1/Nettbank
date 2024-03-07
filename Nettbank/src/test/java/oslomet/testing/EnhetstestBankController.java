@@ -170,7 +170,6 @@ public class EnhetstestBankController {
         assertEquals(konti.get(1), resultat.get(1));
     }
 
-    // Tester henting av saldoer når brukeren ikke er logget inn.
     @Test
     public void hentSaldi_IkkeLoggetInn(){
         // Simulerer at brukeren ikke er logget inn
@@ -182,7 +181,6 @@ public class EnhetstestBankController {
         assertNull(resulstat);
     }
 
-    // Tester henting av saldoer når det oppstår feil.
     @Test
     public void hentSaldi_Feilet(){
         // Simulerer at brukeren er logget inn
@@ -198,7 +196,6 @@ public class EnhetstestBankController {
     }
 
 
-    // Tester registrering av betaling når brukeren er logget inn.
     @Test
     public void RegistrerBetaling_Loggetinn() {
         // Opprett en transaksjon for testformål
@@ -216,7 +213,6 @@ public class EnhetstestBankController {
         assertEquals("OK",resultat);
     }
 
-    // Tester registrering av betaling når brukeren ikke er logget inn.
     @Test
     public void RegistrerBetaling_IkkeLoggetInn(){
         // Opprett en transaksjon for testformål
@@ -231,7 +227,6 @@ public class EnhetstestBankController {
         assertNull(resultat);
     }
 
-    // Tester henting av betalinger når brukeren er logget inn.
     @Test
     public void HentBetalinger_LoggetInn() {
         // Opprett en transaksjon for testformål
@@ -253,7 +248,6 @@ public class EnhetstestBankController {
         assertEquals(transaksjoner, resultat);
     }
 
-    // Tester henting av betalinger når brukeren ikke er logget inn.
     @Test
     public void HentBetalinger_IkkeLoggetInn(){
         // Simuler at brukeren ikke er logget inn
@@ -265,7 +259,6 @@ public class EnhetstestBankController {
         assertNull(resultat);
     }
 
-    // Tester feilhåndtering ved henting av betalinger når brukeren er logget inn.
     @Test
     public void HentBetalinger_Feilet(){
         // Simulerer at brukeren er logget inn
@@ -302,7 +295,6 @@ public class EnhetstestBankController {
             assertEquals(transaksjonListe, resultat);
         }
 
-    // Tester utføring av betaling når brukeren er logget inn, men transaksjonen ikke har en gyldig ID.
     @Test
     public void UtforBetaling_LoggetInn_IkkeOKtxID(){
         // Oppretter en transaksjon
@@ -324,7 +316,6 @@ public class EnhetstestBankController {
         assertNull(resultat);
     }
 
-    // Tester utføring av betaling når brukeren ikke er logget inn.
     @Test
     public void UtforBetaling_IkkeLoggetInn(){
         // Simulerer at brukeren ikke er logget inn
