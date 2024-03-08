@@ -3,6 +3,11 @@
 
 -- --------------------------------------------------------
 --
+
+drop table if exists konto;
+drop table if exists Kunde;
+drop table if exists Poststed;
+drop table if exists Transaksjon;
 -- Tabellstruktur for tabell `Konto`
 --
 
