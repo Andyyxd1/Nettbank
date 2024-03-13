@@ -4,10 +4,10 @@ $(function(){
         const url = "/adminKonto/registrer";
         const konto = {
             kontonummer    : $("#kontoNr").val(),
-            type                    : $("#type").val(),
-            valuta                 : $("#valuta").val(),
+            type           : $("#type").val(),
+            valuta         : $("#valuta").val(),
             personnummer   : $("#personnummer").val()
-        }
+        };
         $.post(url,konto,function(retur) {
             $("#feilPersonnr").html("");
             if(retur === "Feil") {
